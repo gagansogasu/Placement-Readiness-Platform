@@ -7,6 +7,7 @@ import Results from './pages/Results';
 import History from './pages/History';
 import TestChecklist from './pages/TestChecklist';
 import Ship from './pages/Ship';
+import Proof from './pages/Proof';
 
 // Placeholder Components
 const Practice = () => <PageTitle title="Practice Problems" />;
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/history" element={<History />} />
                     <Route path="/prp/07-test" element={<TestChecklist />} />
                     <Route path="/prp/08-ship" element={<Ship />} />
+                    <Route path="/prp/proof" element={<Proof />} />
                     <Route path="/practice" element={<Practice />} />
                     <Route path="/assessments" element={<Assessments />} />
                     <Route path="/resources" element={<Resources />} />
