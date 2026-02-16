@@ -1,10 +1,21 @@
 export const KEYWORD_CATEGORIES = {
-    "Core CS": ["DSA", "OOP", "DBMS", "OS", "Networks"],
-    "Languages": ["Java", "Python", "JavaScript", "TypeScript", "C", "C++", "C#", "Go"],
-    "Web": ["React", "Next.js", "Node.js", "Express", "REST", "GraphQL"],
-    "Data": ["SQL", "MongoDB", "PostgreSQL", "MySQL", "Redis"],
-    "Cloud/DevOps": ["AWS", "Azure", "GCP", "Docker", "Kubernetes", "CI/CD", "Linux"],
-    "Testing": ["Selenium", "Cypress", "Playwright", "JUnit", "PyTest"]
+    coreCS: ["DSA", "OOP", "DBMS", "OS", "Networks"],
+    languages: ["Java", "Python", "JavaScript", "TypeScript", "C", "C++", "C#", "Go"],
+    web: ["React", "Next.js", "Node.js", "Express", "REST", "GraphQL"],
+    data: ["SQL", "MongoDB", "PostgreSQL", "MySQL", "Redis"],
+    cloud: ["AWS", "Azure", "GCP", "Docker", "Kubernetes", "CI/CD", "Linux"],
+    testing: ["Selenium", "Cypress", "Playwright", "JUnit", "PyTest"]
+};
+
+// Helper for display labels
+export const CATEGORY_LABELS = {
+    coreCS: "Core CS",
+    languages: "Languages",
+    web: "Web",
+    data: "Data",
+    cloud: "Cloud/DevOps",
+    testing: "Testing",
+    other: "General"
 };
 
 const ENTERPRISE_COMPANIES = [
@@ -14,11 +25,9 @@ const ENTERPRISE_COMPANIES = [
 
 const getCompanyIntel = (companyName) => {
     if (!companyName.trim()) return null;
-
     const isEnterprise = ENTERPRISE_COMPANIES.some(c =>
         companyName.toLowerCase().includes(c.toLowerCase())
     );
-
     return {
         name: companyName,
         industry: "Technology Services",
@@ -31,56 +40,27 @@ const getCompanyIntel = (companyName) => {
 };
 
 const getRoundMapping = (companyType, skills) => {
-    const hasDSA = skills.includes("DSA");
-    const hasWeb = skills.some(s => KEYWORD_CATEGORIES["Web"].includes(s));
-
     if (companyType === "enterprise") {
         return [
-            {
-                title: "Round 1: Online Test",
-                focus: "DSA + Aptitude",
-                why: "Filters candidates based on core logic and speed."
-            },
-            {
-                title: "Round 2: Technical Interview",
-                focus: "DSA + Core CS",
-                why: "In-depth verification of algorithmic thinking and OS/DBMS knowledge."
-            },
-            {
-                title: "Round 3: Tech + Projects",
-                focus: "System Design & Projects",
-                why: "Checks ability to build end-to-end systems and project ownership."
-            },
-            {
-                title: "Round 4: HR / Cultural Fit",
-                focus: "Behavioral & HR",
-                why: "Ensures alignment with company values and long-term retention."
-            }
+            { roundTitle: "Round 1: Online Test", focusAreas: ["DSA", "Aptitude"], whyItMatters: "Filters candidates based on core logic and speed." },
+            { roundTitle: "Round 2: Technical Interview", focusAreas: ["DSA", "Core CS"], whyItMatters: "In-depth verification of algorithmic thinking." },
+            { roundTitle: "Round 3: Tech + Projects", focusAreas: ["System Design", "Projects"], whyItMatters: "Checks ability to build end-to-end systems." },
+            { roundTitle: "Round 4: HR / Cultural Fit", focusAreas: ["Behavioral", "HR"], whyItMatters: "Ensures alignment with company values." }
         ];
     } else {
         return [
-            {
-                title: "Round 1: Practical Coding",
-                focus: hasWeb ? "Web Frontend/Backend" : "Development Task",
-                why: "Tests immediate ability to contribute to the codebase."
-            },
-            {
-                title: "Round 2: System Discussion",
-                focus: "Architecture & Stack",
-                why: "Ensures you understand the tools you use, not just the code."
-            },
-            {
-                title: "Round 3: Founder/Culture Fit",
-                focus: "Soft Skills & Agility",
-                why: "Critical for small teams to ensure the new hire fits the pace."
-            }
+            { roundTitle: "Round 1: Practical Coding", focusAreas: ["Development Task"], whyItMatters: "Tests immediate ability to contribute to the codebase." },
+            { roundTitle: "Round 2: System Discussion", focusAreas: ["Architecture", "Stack"], whyItMatters: "Ensures you understand the tools you use." },
+            { roundTitle: "Round 3: Founder/Culture Fit", focusAreas: ["Soft Skills"], whyItMatters: "Critical for small teams to ensure the new hire fits." }
         ];
     }
 };
 
 export const analyzeJD = (company, role, jdText) => {
     const text = jdText.toLowerCase();
-    const extractedSkills = {};
+    const extractedSkills = {
+        coreCS: [], languages: [], web: [], data: [], cloud: [], testing: [], other: []
+    };
     let categoryCount = 0;
 
     Object.entries(KEYWORD_CATEGORIES).forEach(([category, skills]) => {
@@ -93,103 +73,116 @@ export const analyzeJD = (company, role, jdText) => {
         }
     });
 
-    if (Object.keys(extractedSkills).length === 0) {
-        extractedSkills["General"] = ["General fresher stack"];
+    // Default if empty
+    if (categoryCount === 0) {
+        extractedSkills.other = ["Communication", "Problem solving", "Basic coding", "Projects"];
     }
 
-    // Score Calculation
-    let score = 35;
-    score += Math.min(categoryCount * 5, 30);
-    if (company.trim()) score += 10;
-    if (role.trim()) score += 10;
-    if (jdText.length > 800) score += 10;
-    score = Math.min(score, 100);
-
-    // Generate Questions
-    const questions = [];
     const allDetected = Object.values(extractedSkills).flat();
 
+    // Score Calculation
+    let baseScore = 35;
+    baseScore += Math.min(categoryCount * 5, 30);
+    if (company.trim()) baseScore += 10;
+    if (role.trim()) baseScore += 10;
+    if (jdText.length > 800) baseScore += 10;
+    baseScore = Math.min(baseScore, 100);
+
+    // Questions
+    const questions = [];
     if (allDetected.includes("SQL")) questions.push("Explain indexing and when it helps.");
     if (allDetected.includes("React")) questions.push("Explain state management options in React (Context vs Redux).");
     if (allDetected.includes("DSA")) questions.push("How would you optimize search in sorted data?");
-    if (allDetected.includes("JavaScript")) questions.push("What are closures and how are they used?");
-    if (allDetected.includes("Java")) questions.push("Explain the difference between an interface and an abstract class.");
-    if (allDetected.includes("Docker")) questions.push("What is a container and how does it differ from a VM?");
-    if (allDetected.includes("Node.js")) questions.push("Describe the event loop in Node.js.");
+    const extra = ["Tell me about a challenging project.", "How do you stay updated?", "Explain your version control workflow."];
+    while (questions.length < 10 && extra.length > 0) questions.push(extra.shift());
 
-    const genericQuestions = [
-        "Tell me about a challenging project you've worked on.",
-        "How do you stay updated with the latest technologies?",
-        "Explain your experience with version control systems like Git.",
-        "How do you handle debugging complex issues in a production environment?",
-        "Describe a time you had to work with a team to solve a technical problem."
-    ];
-
-    while (questions.length < 10 && genericQuestions.length > 0) {
-        const q = genericQuestions.shift();
-        if (!questions.includes(q)) questions.push(q);
-    }
-
-    const plan = [
-        { days: "Day 1–2", task: "Basics + core CS revision (OS, DBMS, OOP)." },
-        { days: "Day 3–4", task: `Deep dive into detected skills: ${allDetected.join(", ")}.` },
-        { days: "Day 5", task: "Project alignment with JD and resume walkthrough." },
-        { days: "Day 6", task: "Mock interview practice using the generated question bank." },
-        { days: "Day 7", task: "Revision of weak areas and final preparation." }
-    ];
-
-    if (allDetected.includes("React") || allDetected.includes("Next.js")) {
-        plan[0].task += " Focus on Frontend fundamentals.";
-    }
-
-    const checklist = [
-        { round: "Round 1: Aptitude / Basics", items: ["Quantitative Aptitude", "Logical Reasoning", "Verbal Ability", "Basic Coding", "CS Fundamentals"] },
-        { round: "Round 2: DSA + Core CS", items: ["Array/String problems", "Trees/Graphs basics", "Hashing", "OS concepts", "DBMS queries"] },
-        { round: "Round 3: Tech Interview", items: ["Project deep-dive", "Framework specific questions", "System Design (Basic)", "Coding live", "Resume verification"] },
-        { round: "Round 4: Managerial / HR", items: ["Behavioral questions", "Company specific research", "Salary discussion", "Cultural fit", "Future goals"] }
+    // Plan
+    const plan7Days = [
+        { day: "Day 1-2", focus: "Fundamentals", tasks: ["Revise Core CS basics", "Brush up on detected languages"] },
+        { day: "Day 3-4", focus: "Problem Solving", tasks: ["Practice DSA common patterns", "Technical stack deep-dive"] },
+        { day: "Day 5-7", focus: "Final Review", tasks: ["Project walkthrough", "Mock interview", "System design basics"] }
     ];
 
     const companyIntel = getCompanyIntel(company);
     const roundMapping = getRoundMapping(companyIntel?.type || "startup", allDetected);
 
+    const checklist = roundMapping.map(r => ({
+        roundTitle: r.roundTitle,
+        items: [...r.focusAreas, "Resume verification"]
+    }));
+
+    const now = new Date().toISOString();
+
     return {
         id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-        company,
-        role,
+        createdAt: now,
+        updatedAt: now,
+        company: company || "",
+        role: role || "",
         jdText,
         extractedSkills,
-        plan,
+        roundMapping,
         checklist,
-        questions: questions.slice(0, 10),
-        readinessScore: score,
-        companyIntel,
-        roundMapping
+        plan7Days,
+        questions,
+        baseScore,
+        skillConfidenceMap: {},
+        finalScore: baseScore,
+        companyIntel
     };
 };
 
+export const getHistory = () => {
+    try {
+        const history = JSON.parse(localStorage.getItem('prep_history') || '[]');
+        // Minimal validation to filter corrupted entries
+        return history.filter(entry => entry && entry.id && entry.jdText);
+    } catch (e) {
+        console.error("Corrupted history found");
+        return [];
+    }
+};
+
 export const saveAnalysis = (analysis) => {
-    const history = JSON.parse(localStorage.getItem('prep_history') || '[]');
+    const history = getHistory();
     history.unshift(analysis);
     localStorage.setItem('prep_history', JSON.stringify(history));
 };
 
-export const getHistory = () => {
-    return JSON.parse(localStorage.getItem('prep_history') || '[]');
-};
-
 export const getAnalysisById = (id) => {
-    const history = getHistory();
-    return history.find(a => a.id === id);
+    return getHistory().find(a => a.id === id);
 };
 
 export const updateAnalysisById = (id, updates) => {
     const history = getHistory();
     const index = history.findIndex(a => a.id === id);
     if (index !== -1) {
-        history[index] = { ...history[index], ...updates };
+        const entry = history[index];
+        const updatedEntry = { ...entry, ...updates, updatedAt: new Date().toISOString() };
+
+        // Recalculate final score if confidence map changed
+        if (updates.skillConfidenceMap) {
+            const allSkills = Object.values(entry.extractedSkills).flat();
+            let scoreChange = 0;
+            allSkills.forEach(s => {
+                if (updates.skillConfidenceMap[s] === "know") scoreChange += 2;
+                else if (updates.skillConfidenceMap[s] === "practice") scoreChange -= 0; // Default practice is 0 impact vs base
+            });
+            // Correct logic: Know is +2, Practice is -2 from base? No, request said +2 for "know", -2 for "practice".
+            // Let's refine: Score = baseScore + (know_count * 2) - (practice_count * 2)
+            // Actually user said: Start from base. Then +2 per know, -2 per practice.
+            let finalScore = entry.baseScore;
+            allSkills.forEach(s => {
+                const status = updates.skillConfidenceMap[s] || "practice";
+                if (status === "know") finalScore += 2;
+                else finalScore -= 2;
+            });
+            updatedEntry.finalScore = Math.min(Math.max(finalScore, 0), 100);
+        }
+
+        history[index] = updatedEntry;
         localStorage.setItem('prep_history', JSON.stringify(history));
-        return history[index];
+        return updatedEntry;
     }
     return null;
 };
