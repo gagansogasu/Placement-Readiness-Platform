@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AppShell from './components/AppShell';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
+import Results from './pages/Results';
+import History from './pages/History';
 
 // Placeholder Components
 const Practice = () => <PageTitle title="Practice Problems" />;
@@ -26,6 +28,8 @@ function App() {
                 {/* Dashboard Routes App Shell */}
                 <Route element={<AppShell />}>
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/results/:id?" element={<Results />} />
+                    <Route path="/history" element={<History />} />
                     <Route path="/practice" element={<Practice />} />
                     <Route path="/assessments" element={<Assessments />} />
                     <Route path="/resources" element={<Resources />} />

@@ -1,10 +1,11 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Code, BookOpen, User, ClipboardCheck } from 'lucide-react';
+import { LayoutDashboard, Code, BookOpen, User, ClipboardCheck, History as HistoryIcon } from 'lucide-react';
 
 const AppShell = () => {
     const navItems = [
         { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
+        { name: 'History', path: '/history', icon: <HistoryIcon size={20} /> },
         { name: 'Practice', path: '/practice', icon: <Code size={20} /> },
         { name: 'Assessments', path: '/assessments', icon: <ClipboardCheck size={20} /> },
         { name: 'Resources', path: '/resources', icon: <BookOpen size={20} /> },
