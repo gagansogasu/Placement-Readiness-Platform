@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AppShell from './components/AppShell';
 import LandingPage from './pages/LandingPage';
+import Dashboard from './pages/Dashboard';
 
 // Placeholder Components
-const Dashboard = () => <PageTitle title="Dashboard Overview" />;
 const Practice = () => <PageTitle title="Practice Problems" />;
 const Assessments = () => <PageTitle title="Skill Assessments" />;
 const Resources = () => <PageTitle title="Study Resources" />;
