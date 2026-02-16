@@ -7,6 +7,77 @@ export const KEYWORD_CATEGORIES = {
     "Testing": ["Selenium", "Cypress", "Playwright", "JUnit", "PyTest"]
 };
 
+const ENTERPRISE_COMPANIES = [
+    "Google", "Amazon", "Microsoft", "Meta", "Apple", "TCS", "Infosys", "Wipro",
+    "Accenture", "Cognizant", "IBM", "Intel", "Cisco", "Oracle", "SAP", "Salesforce"
+];
+
+const getCompanyIntel = (companyName) => {
+    if (!companyName.trim()) return null;
+
+    const isEnterprise = ENTERPRISE_COMPANIES.some(c =>
+        companyName.toLowerCase().includes(c.toLowerCase())
+    );
+
+    return {
+        name: companyName,
+        industry: "Technology Services",
+        size: isEnterprise ? "Enterprise (2000+)" : "Startup (<200)",
+        focus: isEnterprise
+            ? "Structured DSA + core fundamentals. High emphasis on scalability and CS basics."
+            : "Practical problem solving + tech stack depth. Fast-paced delivery focus.",
+        type: isEnterprise ? "enterprise" : "startup"
+    };
+};
+
+const getRoundMapping = (companyType, skills) => {
+    const hasDSA = skills.includes("DSA");
+    const hasWeb = skills.some(s => KEYWORD_CATEGORIES["Web"].includes(s));
+
+    if (companyType === "enterprise") {
+        return [
+            {
+                title: "Round 1: Online Test",
+                focus: "DSA + Aptitude",
+                why: "Filters candidates based on core logic and speed."
+            },
+            {
+                title: "Round 2: Technical Interview",
+                focus: "DSA + Core CS",
+                why: "In-depth verification of algorithmic thinking and OS/DBMS knowledge."
+            },
+            {
+                title: "Round 3: Tech + Projects",
+                focus: "System Design & Projects",
+                why: "Checks ability to build end-to-end systems and project ownership."
+            },
+            {
+                title: "Round 4: HR / Cultural Fit",
+                focus: "Behavioral & HR",
+                why: "Ensures alignment with company values and long-term retention."
+            }
+        ];
+    } else {
+        return [
+            {
+                title: "Round 1: Practical Coding",
+                focus: hasWeb ? "Web Frontend/Backend" : "Development Task",
+                why: "Tests immediate ability to contribute to the codebase."
+            },
+            {
+                title: "Round 2: System Discussion",
+                focus: "Architecture & Stack",
+                why: "Ensures you understand the tools you use, not just the code."
+            },
+            {
+                title: "Round 3: Founder/Culture Fit",
+                focus: "Soft Skills & Agility",
+                why: "Critical for small teams to ensure the new hire fits the pace."
+            }
+        ];
+    }
+};
+
 export const analyzeJD = (company, role, jdText) => {
     const text = jdText.toLowerCase();
     const extractedSkills = {};
@@ -46,7 +117,6 @@ export const analyzeJD = (company, role, jdText) => {
     if (allDetected.includes("Docker")) questions.push("What is a container and how does it differ from a VM?");
     if (allDetected.includes("Node.js")) questions.push("Describe the event loop in Node.js.");
 
-    // Fill up to 10
     const genericQuestions = [
         "Tell me about a challenging project you've worked on.",
         "How do you stay updated with the latest technologies?",
@@ -60,7 +130,6 @@ export const analyzeJD = (company, role, jdText) => {
         if (!questions.includes(q)) questions.push(q);
     }
 
-    // Generate Plan
     const plan = [
         { days: "Day 1–2", task: "Basics + core CS revision (OS, DBMS, OOP)." },
         { days: "Day 3–4", task: `Deep dive into detected skills: ${allDetected.join(", ")}.` },
@@ -73,13 +142,15 @@ export const analyzeJD = (company, role, jdText) => {
         plan[0].task += " Focus on Frontend fundamentals.";
     }
 
-    // Checklist
     const checklist = [
         { round: "Round 1: Aptitude / Basics", items: ["Quantitative Aptitude", "Logical Reasoning", "Verbal Ability", "Basic Coding", "CS Fundamentals"] },
         { round: "Round 2: DSA + Core CS", items: ["Array/String problems", "Trees/Graphs basics", "Hashing", "OS concepts", "DBMS queries"] },
         { round: "Round 3: Tech Interview", items: ["Project deep-dive", "Framework specific questions", "System Design (Basic)", "Coding live", "Resume verification"] },
         { round: "Round 4: Managerial / HR", items: ["Behavioral questions", "Company specific research", "Salary discussion", "Cultural fit", "Future goals"] }
     ];
+
+    const companyIntel = getCompanyIntel(company);
+    const roundMapping = getRoundMapping(companyIntel?.type || "startup", allDetected);
 
     return {
         id: Date.now().toString(),
@@ -91,7 +162,9 @@ export const analyzeJD = (company, role, jdText) => {
         plan,
         checklist,
         questions: questions.slice(0, 10),
-        readinessScore: score
+        readinessScore: score,
+        companyIntel,
+        roundMapping
     };
 };
 
