@@ -5,6 +5,8 @@ import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import Results from './pages/Results';
 import History from './pages/History';
+import TestChecklist from './pages/TestChecklist';
+import Ship from './pages/Ship';
 
 // Placeholder Components
 const Practice = () => <PageTitle title="Practice Problems" />;
@@ -30,6 +32,8 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/results/:id?" element={<Results />} />
                     <Route path="/history" element={<History />} />
+                    <Route path="/prp/07-test" element={<TestChecklist />} />
+                    <Route path="/prp/08-ship" element={<Ship />} />
                     <Route path="/practice" element={<Practice />} />
                     <Route path="/assessments" element={<Assessments />} />
                     <Route path="/resources" element={<Resources />} />
