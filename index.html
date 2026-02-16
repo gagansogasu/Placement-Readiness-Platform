@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KodNest Premium Build System</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <header class="top-bar">
+        <div class="project-name">KodNest Premium Build System</div>
+        <div class="progress-indicator">Step 01 / 04</div>
+        <div class="status-box">
+            <span class="badge status-progress">In Progress</span>
+        </div>
+    </header>
+
+    <section class="context-header">
+        <h1>Foundation & Design Architecture</h1>
+        <p class="subtext">Establishing the core principles and visual language for a calm, intentional SaaS experience.
+        </p>
+    </section>
+
+    <main class="main-layout">
+        <div class="primary-workspace">
+            <div class="card">
+                <h3>The Workspace</h3>
+                <p>This is where the main interaction occurs. The layout is generous, prioritizing high-legibility
+                    typography and consistent spacing. Every element here is intentional, avoiding any unnecessary
+                    visual noise.</p>
+                <div style="margin-top: var(--space-3);">
+                    <label for="sample-input"
+                        style="display: block; margin-bottom: var(--space-1); font-size: 14px; font-weight: 600;">System
+                        Configuration</label>
+                    <input type="text" id="sample-input" placeholder="e.g. project-alpha-build">
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Predictable Components</h3>
+                <p>Buttons and inputs follow a strict rule-set to ensure internal coherence. No shadows, no gradients,
+                    just solid intent.</p>
+                <div style="display: flex; gap: var(--space-2); margin-top: var(--space-3);">
+                    <button class="btn btn-primary">Primary Action</button>
+                    <button class="btn btn-secondary">Secondary Action</button>
+                </div>
+            </div>
+        </div>
+
+        <aside class="secondary-panel">
+            <div class="card">
+                <h4>Next Step</h4>
+                <p style="font-size: 14px; color: var(--text-secondary);">Define the typography scale and font pairs
+                    that resonate with the brand's confidence.</p>
+            </div>
+
+            <div class="card">
+                <h4>Build Instruction</h4>
+                <div class="prompt-box">
+                    generate_typography_system --serif "Lora" --sans "Inter" --scale "major-third"
+                </div>
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-1); margin-top: var(--space-2);">
+                    <button class="btn btn-secondary" style="font-size: 12px; padding: 4px;">Copy</button>
+                    <button class="btn btn-secondary" style="font-size: 12px; padding: 4px;">Build in Lovable</button>
+                    <button class="btn btn-secondary" style="font-size: 12px; padding: 4px;">It Worked</button>
+                    <button class="btn btn-secondary"
+                        style="font-size: 12px; padding: 4px; color: var(--accent-color);">Error</button>
+                </div>
+                <button class="btn btn-secondary"
+                    style="width: 100%; margin-top: var(--space-1); font-size: 12px; padding: 4px;">Add
+                    Screenshot</button>
+            </div>
+
+            <div class="card" style="border-left: 4px solid var(--warning-color);">
+                <h4 style="color: var(--warning-color);">Empty State</h4>
+                <p style="font-size: 14px;">No data processed yet. Please configure the primary workspace to begin.</p>
+                <button class="btn btn-primary" style="width: 100%; font-size: 12px;">Initialize</button>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="proof-footer">
+        <div class="checklist-item-group">
+            <label class="checklist-item">
+                <input type="checkbox" data-proof="ui-proof"> UI Built
+            </label>
+            <input type="text" id="ui-proof" class="proof-input" placeholder="Enter PR URL or Screenshot Link">
+        </div>
+        <div class="checklist-item-group">
+            <label class="checklist-item">
+                <input type="checkbox" data-proof="logic-proof"> Logic Working
+            </label>
+            <input type="text" id="logic-proof" class="proof-input" placeholder="Enter Test Run ID">
+        </div>
+        <div class="checklist-item-group">
+            <label class="checklist-item">
+                <input type="checkbox" data-proof="test-proof"> Test Passed
+            </label>
+            <input type="text" id="test-proof" class="proof-input" placeholder="Enter Coverage %">
+        </div>
+        <div class="checklist-item-group">
+            <label class="checklist-item">
+                <input type="checkbox" data-proof="deploy-proof"> Deployed
+            </label>
+            <input type="text" id="deploy-proof" class="proof-input" placeholder="Enter Prod URL">
+        </div>
+        <div style="margin-left: auto; font-size: 12px; color: var(--text-secondary);">
+            Requires user proof for each milestone.
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
